@@ -1,7 +1,9 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:fashion_ecommerce_app/data/app_data.dart';
 import 'package:flutter/material.dart';
 
-import '../model/base_model.dart';
+import '../model/product_model.dart';
 import '../utils/constants.dart';
 import '../widget/add_to_cart.dart';
 import '../widget/reuseable_text.dart';
@@ -14,7 +16,7 @@ class Details extends StatefulWidget {
     required this.isCameFromMostPopularPart,
   });
 
-  final BaseModel data;
+  final Product data;
   final bool isCameFromMostPopularPart;
 
   @override
@@ -30,7 +32,9 @@ class _DetailsState extends State<Details> {
     var size = MediaQuery.of(context).size;
     var textTheme = Theme.of(context).textTheme;
 
-    BaseModel current = widget.data;
+    Product current = widget.data;
+    int _current = 0; // initialize the current page index to 0
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -57,7 +61,7 @@ class _DetailsState extends State<Details> {
                       height: size.height * 0.5,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage(current.imageUrl),
+                            image: NetworkImage(current.imageUrl),
                             fit: BoxFit.cover),
                       ),
                     ),
@@ -78,6 +82,7 @@ class _DetailsState extends State<Details> {
                 ],
               ),
             ),
+
 
             /// info
             FadeInUp(

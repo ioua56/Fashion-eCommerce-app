@@ -2,10 +2,10 @@ import 'package:advance_notification/advance_notification.dart';
 import 'package:flutter/material.dart';
 
 import '../data/app_data.dart';
-import '../model/base_model.dart';
+import '../model/product_model.dart';
 
 class AddToCart {
-  static void addToCart(BaseModel data, BuildContext context) {
+  static void addToCart(Product data, BuildContext context) {
     bool contains = itemsOnCart.contains(data);
 
     if (contains == true) {

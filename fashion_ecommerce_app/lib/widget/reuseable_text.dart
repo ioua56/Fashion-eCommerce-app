@@ -12,7 +12,7 @@ class ReuseableText extends StatelessWidget {
     var textTheme = Theme.of(context).textTheme;
     return RichText(
       text: TextSpan(
-        text: "€",
+        text: "DZA",
         style: textTheme.subtitle2?.copyWith(
           fontSize: 21,
           color: primaryColor,

@@ -1,6 +1,9 @@
-import '../model/base_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../model/product_model.dart';
 import '../model/categories_model.dart';
 
+/*
 List<CategoriesModel> categories = [
   CategoriesModel(
     imageUrl: "assets/images/kids.jpg",
@@ -31,82 +34,105 @@ List<CategoriesModel> categories = [
     title: "Hat",
   ),
 ];
+*/
+class ImageTest {
+  final String imageUrl;
 
-List<BaseModel> mainList = [
-  BaseModel(
-    imageUrl: "assets/images/mens.jpg",
-    name: "Casual Jeans Pant",
-    price: 155.99,
+  ImageTest({
+    required this.imageUrl,
+  });
+}
+
+class ProductTest {
+  final List<ImageTest> images;
+
+  ProductTest({
+    required this.images,
+  });
+}
+
+ProductTest TestPorduct = ProductTest(images: [
+  ImageTest(imageUrl: "assets/Image/dress1.jpg"),
+  ImageTest(imageUrl: "assets/Image/dress1.jpg"),
+  ImageTest(imageUrl: "assets/Image/dress1.jpg")
+]);
+
+List<Product> mainList = [
+/*  Product(
+
+    imageUrl: "assets/Image/dress5.jpg",
+    name: "",
+    price: 2000.00,
     review: 3.6,
     star: 4.8,
-    id: 1,
+    id: '1qdsmfljqlsdjkf',
     value: 1,
+    category: DocumentReference
   ),
-  BaseModel(
-    imageUrl: "assets/images/blazer.jpg",
+  Product(
+    imageUrl: "assets/Image/dress6.png",
     name: "blue Coat",
-    price: 143.99,
+    price: 1700.00,
     review: 5.6,
     star: 5.0,
-    id: 2,
+    id: 'qmlsdjkfmqlsdjf2',
     value: 1,
   ),
-  BaseModel(
-    imageUrl: "assets/images/jacjket.jpg",
+  Product(
+    imageUrl: "assets/Image/dress1.jpg",
     name: "Deep Green Jacket",
-    price: 212.99,
+    price: 2500.00,
     review: 2.6,
     star: 3.7,
-    id: 3,
+    id: '3eraemljkfqdf',
     value: 1,
   ),
-  BaseModel(
-    imageUrl: "assets/images/shirt.jpg",
+  Product(
+    imageUrl: "assets/Image/dress2.jpg",
     name: "Orange Shirt",
-    price: 432.99,
+    price: 2500.00,
     review: 1.4,
     star: 2.4,
-    id: 4,
+    id: '4emralkejrare',
     value: 1,
   ),
-  BaseModel(
-    imageUrl: "assets/images/sw.jpg",
+  Product(
+    imageUrl: "assets/Image/dress3.jpg",
     name: "Grey Pullover",
-    price: 112.99,
+    price: 1650.00,
     review: 4.2,
     star: 1.8,
-    id: 5,
+    id: '5qmsdlfjiefn',
     value: 1,
   ),
-  BaseModel(
-    imageUrl: "assets/images/women.jpg",
+  Product(
+    imageUrl: "assets/Image/dress4.jpg",
     name: "Pullover Sleeveless",
-    price: 320.99,
+    price: 2200.00,
     review: 2.1,
     star: 3.1,
-    id: 6,
+    id: '6',
     value: 1,
   ),
-  BaseModel(
-    imageUrl: "assets/images/womens.jpg",
+  Product(
+    imageUrl: "assets/Image/dress5.jpg",
     name: "Black Coat",
-    price: 113.99,
+    price: 2000.00,
     review: 3.1,
     star: 4.8,
-    id: 7,
+    id: '7qmdlsfjkaoeijf',
     value: 1,
   ),
-  BaseModel(
-    imageUrl: "assets/images/t-shirt.jpg",
+  Product(
+    imageUrl: "assets/Image/dress7.jpg",
     name: "White Shirt",
-    price: 178.99,
+    price: 1700.00,
     review: 2.6,
     star: 4.8,
-    id: 8,
+    id: '8emlfkjazepo',
     value: 1,
-  ),
+  ),*/
 ];
 
-
-List<BaseModel> itemsOnCart = [];
-List<BaseModel> itemsOnSearch = [];
+List<Product> itemsOnCart = [];
+List<Product> itemsOnSearch = [];

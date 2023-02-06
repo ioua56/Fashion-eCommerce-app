@@ -5,7 +5,7 @@ import 'package:line_icons/line_icons.dart';
 import '../data/app_data.dart';
 import '../widget/reuseable_row_for_cart.dart';
 import '../main_wrapper.dart';
-import '../model/base_model.dart';
+import '../model/product_model.dart';
 import '../utils/constants.dart';
 import '../widget/reuseable_button.dart';
 
@@ -27,7 +27,7 @@ class _CartState extends State<Cart> {
     if (itemsOnCart.isEmpty) {
       total = 0;
     } else {
-      for (BaseModel data in itemsOnCart) {
+      for (Product data in itemsOnCart) {
         total = total + data.price * data.value;
       }
     }
@@ -55,7 +55,7 @@ class _CartState extends State<Cart> {
     if (itemsOnCart.isEmpty) {
       subTotal = 0;
     } else {
-      for (BaseModel data in itemsOnCart) {
+      for (Product data in itemsOnCart) {
         subTotal = subTotal + data.price.round();
         subTotal = subTotal - 160;
       }
@@ -64,7 +64,7 @@ class _CartState extends State<Cart> {
   }
 
   /// delete function for cart
-  void onDelete(BaseModel data) {
+  void onDelete(Product data) {
     setState(() {
       if (itemsOnCart.length == 1) {
         itemsOnCart.clear();
@@ -162,7 +162,7 @@ class _CartState extends State<Cart> {
                                     ],
                                     color: Colors.pink,
                                     image: DecorationImage(
-                                        image: AssetImage(current.imageUrl),
+                                        image: NetworkImage(current.imageUrl),
                                         fit: BoxFit.cover),
                                   ),
                                   width: size.width * 0.4,
@@ -200,10 +200,10 @@ class _CartState extends State<Cart> {
                                       ),
                                       RichText(
                                           text: TextSpan(
-                                              text: "€",
+                                              text: "DZA",
                                               style:
                                                   textTheme.subtitle2?.copyWith(
-                                                fontSize: 22,
+                                                fontSize: 18,
                                                 color: primaryColor,
                                                 fontWeight: FontWeight.bold,
                                               ),
@@ -218,7 +218,7 @@ class _CartState extends State<Cart> {
                                             )
                                           ])),
                                       SizedBox(
-                                        height: size.height * 0.04,
+                                        height: size.height * 0.03,
                                       ),
                                       Text(
                                         "Size = ${sizes[3]}",
@@ -325,7 +325,7 @@ class _CartState extends State<Cart> {
               bottom: 0,
               child: Container(
                 width: size.width,
-                height: size.height * 0.36,
+                height: size.height * 0.38,
                 color: Colors.white,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(

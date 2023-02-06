@@ -1,11 +1,14 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:fashion_ecommerce_app/screens/category.dart';
 import 'package:flutter/material.dart';
 
 import '../data/app_data.dart';
+import '../data/categories_data.dart';
+import '../data/products_data.dart';
 import '../screens/details.dart';
 import '../model/categories_model.dart';
 import '../utils/constants.dart';
-import '../model/base_model.dart';
+import '../model/product_model.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -94,69 +97,96 @@ class _HomeState extends State<Home> {
               /// Categories
               FadeInUp(
                 delay: const Duration(milliseconds: 450),
-                child: Container(
-                  margin: const EdgeInsets.only(top: 7),
-                  width: size.width,
-                  height: size.height * 0.14,
-                  child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: categories.length,
-                      itemBuilder: (ctx, index) {
-                        CategoriesModel current = categories[index];
-                        return Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            children: [
-                              CircleAvatar(
-                                radius: 35,
-                                backgroundImage: AssetImage(current.imageUrl),
-                              ),
-                              SizedBox(
-                                height: size.height * 0.008,
-                              ),
-                              Text(
-                                current.title,
-                                style: textTheme.subtitle1,
-                              ),
-                            ],
-                          ),
+                child: StreamBuilder<List<CategoriesModel>>(
+                    stream: CategoriesData().categories,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Container(
+                          margin: const EdgeInsets.only(top: 7),
+                          width: size.width,
+                          height: size.height * 0.14,
+                          child: ListView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (ctx, index) {
+                                CategoriesModel current = snapshot.data![index];
+                                return Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => Category(
+                                            category: current,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: Column(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 35,
+                                          backgroundImage:
+                                              NetworkImage(current.imageUrl),
+                                        ),
+                                        SizedBox(
+                                          height: size.height * 0.002,
+                                        ),
+                                        Text(
+                                          current.title,
+                                          style: textTheme.subtitle1,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
                         );
-                      }),
-                ),
+                      }
+                      return Center(child: CircularProgressIndicator());
+                    }),
               ),
 
-              /// Body Slider
+              /// Popular Products Body Slider
               FadeInUp(
                 delay: const Duration(milliseconds: 550),
-                child: Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  width: size.width,
-                  height: size.height * 0.45,
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: mainList.length,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Details(
-                                  data: mainList[index],
-                                  isCameFromMostPopularPart: false,
-                                ),
-                              ),
-                            );
-                          },
-                          child: view(index, textTheme, size));
-                    },
-                  ),
-                ),
+                child: StreamBuilder<List<Product>>(
+                    stream: ProductsData().popularProducts,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Container(
+                          margin: const EdgeInsets.only(top: 10),
+                          width: size.width,
+                          height: size.height * 0.45,
+                          child: PageView.builder(
+                            controller: _pageController,
+                            itemCount: snapshot.data!.length,
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Details(
+                                          data: snapshot.data![index],
+                                          isCameFromMostPopularPart: false,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: view(snapshot.data![index], index,
+                                      textTheme, size));
+                            },
+                          ),
+                        );
+                      }
+                      return Container();
+                    }),
               ),
 
-              /// Most Popular Text
+              /// New Products Text
               FadeInUp(
                 delay: const Duration(milliseconds: 650),
                 child: Padding(
@@ -165,91 +195,106 @@ class _HomeState extends State<Home> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Most Popular", style: textTheme.headline3),
+                      Text("New Products", style: textTheme.headline3),
                       Text("See all", style: textTheme.headline4),
                     ],
                   ),
                 ),
               ),
 
-              /// Most Popular Content
+              /// New Products Content
               FadeInUp(
                 delay: const Duration(milliseconds: 750),
-                child: Container(
-                  margin: const EdgeInsets.only(top: 10.0),
-                  width: size.width,
-                  height: size.height * 0.44,
-                  child: GridView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: mainList.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2, childAspectRatio: 0.63),
-                      itemBuilder: (context, index) {
-                        BaseModel current = mainList[index];
-                        return GestureDetector(
-                          onTap: (() => Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                  return Details(
-                                    data: current,
-                                    isCameFromMostPopularPart: true,
-                                  );
-                                }),
-                              )),
-                          child: Hero(
-                            tag: current.imageUrl,
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: size.width * 0.5,
-                                  height: size.height * 0.3,
-                                  margin: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(3),
-                                    image: DecorationImage(
-                                      image: AssetImage(current.imageUrl),
-                                      fit: BoxFit.cover,
+                child: StreamBuilder<List<Product>>(
+                    stream: ProductsData().products,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Container(
+                          margin: const EdgeInsets.only(top: 10.0),
+                          width: size.width,
+                          height: size.height * 0.44,
+                          child: GridView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: snapshot.data!.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      childAspectRatio: 0.63),
+                              itemBuilder: (context, index) {
+                                Product current = snapshot.data![index];
+                                return GestureDetector(
+                                  onTap: (() => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) {
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
+                                          return Details(
+                                            data: current,
+                                            isCameFromMostPopularPart: true,
+                                          );
+                                        }),
+                                      )),
+                                  child: Hero(
+                                    tag: current.imageUrl,
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          width: size.width * 0.5,
+                                          height: size.height * 0.28,
+                                          margin: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(3),
+                                            image: DecorationImage(
+                                              image:
+                                                  NetworkImage(current.imageUrl),
+                                              fit: BoxFit.cover,
+                                            ),
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                offset: Offset(0, 4),
+                                                blurRadius: 4,
+                                                color:
+                                                    Color.fromARGB(61, 0, 0, 0),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 2.0),
+                                          child: Text(
+                                            current.name,
+                                            style: textTheme.headline2,
+                                          ),
+                                        ),
+                                        RichText(
+                                            text: TextSpan(
+                                                text: "DZA",
+                                                style: textTheme.subtitle2
+                                                    ?.copyWith(
+                                                  color: primaryColor,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                children: [
+                                              TextSpan(
+                                                text: current.price.toString(),
+                                                style: textTheme.subtitle2
+                                                    ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              )
+                                            ])),
+                                      ],
                                     ),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        offset: Offset(0, 4),
-                                        blurRadius: 4,
-                                        color: Color.fromARGB(61, 0, 0, 0),
-                                      )
-                                    ],
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 2.0),
-                                  child: Text(
-                                    current.name,
-                                    style: textTheme.headline2,
-                                  ),
-                                ),
-                                RichText(
-                                    text: TextSpan(
-                                        text: "€",
-                                        style: textTheme.subtitle2?.copyWith(
-                                          color: primaryColor,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        children: [
-                                      TextSpan(
-                                        text: current.price.toString(),
-                                        style: textTheme.subtitle2?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      )
-                                    ])),
-                              ],
-                            ),
-                          ),
+                                );
+                              }),
                         );
-                      }),
-                ),
+                      }
+                      return Center(child: CircularProgressIndicator());
+                    }),
               ),
             ],
           ),
@@ -259,7 +304,7 @@ class _HomeState extends State<Home> {
   }
 
   /// Page View
-  Widget view(int index, TextTheme theme, Size size) {
+  Widget view(Product data, int index, TextTheme theme, Size size) {
     return AnimatedBuilder(
         animation: _pageController,
         builder: (context, child) {
@@ -270,13 +315,13 @@ class _HomeState extends State<Home> {
           }
           return Transform.rotate(
             angle: 3.14 * value,
-            child: card(mainList[index], theme, size),
+            child: card(data, theme, size),
           );
         });
   }
 
   /// Page view Cards
-  Widget card(BaseModel data, TextTheme theme, Size size) {
+  Widget card(Product data, TextTheme theme, Size size) {
     return Padding(
       padding: const EdgeInsets.only(top: 15.0),
       child: Column(
@@ -289,7 +334,7 @@ class _HomeState extends State<Home> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(3),
                 image: DecorationImage(
-                  image: AssetImage(data.imageUrl),
+                  image: NetworkImage(data.imageUrl),
                   fit: BoxFit.cover,
                 ),
                 boxShadow: const [
@@ -310,10 +355,10 @@ class _HomeState extends State<Home> {
           ),
           RichText(
             text: TextSpan(
-              text: "€",
+              text: "DZA",
               style: theme.subtitle2?.copyWith(
                 color: primaryColor,
-                fontSize: 26,
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
               ),
               children: [

@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:bottom_bar_matu/bottom_bar_matu.dart';
+import 'package:fashion_ecommerce_app/screens/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 
@@ -16,7 +17,7 @@ class MainWrapper extends StatefulWidget {
 }
 
 class _MainWrapperState extends State<MainWrapper> {
-  final int _index = 0;
+  int _index = 0;
   bool isSearchActive = false;
 
   List<Widget> screens = [
@@ -53,8 +54,9 @@ class _MainWrapperState extends State<MainWrapper> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {},
+          //TODO: put our logo here instead of home icon
           icon: const Icon(
-            Icons.menu,
+            Icons.home,
             color: Colors.black,
             size: 30,
           ),
@@ -105,11 +107,25 @@ class _MainWrapperState extends State<MainWrapper> {
         items: [
           BottomBarItem(iconData: Icons.home),
           BottomBarItem(iconData: Icons.search),
-          BottomBarItem(iconData: Icons.explore),
+          //BottomBarItem(iconData: Icons.explore),
           BottomBarItem(iconData: Icons.settings),
-          BottomBarItem(iconData: Icons.mail),
+          BottomBarItem(iconData: Icons.account_circle_outlined),
         ],
-        onSelect: (index) {},
+        onSelect: (index) {
+          setState(() {
+            _index = index;
+            switch (_index) {
+
+              case 1:
+                Navigator.pushNamed(context, Search.routeName);
+                break;
+              case 2:
+                Navigator.pushNamed(context, SettingScreen.routeName);
+                break;
+
+            }
+          });
+        },
       ),
     );
   }

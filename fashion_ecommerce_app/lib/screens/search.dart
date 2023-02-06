@@ -2,13 +2,15 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 
-import '../model/base_model.dart';
+import '../model/product_model.dart';
 import '../utils/constants.dart';
 import '../widget/add_to_cart.dart';
 import '../data/app_data.dart';
 import '../screens/details.dart';
 
 class Search extends StatefulWidget {
+  static const routeName = '/search';
+
   const Search({super.key});
 
   @override
@@ -112,7 +114,7 @@ class _SearchState extends State<Search> {
                             const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2, childAspectRatio: 0.63),
                         itemBuilder: (context, index) {
-                          BaseModel current = itemsOnSearch[index];
+                          Product current = itemsOnSearch[index];
                           return FadeInUp(
                             delay: Duration(milliseconds: 100 * index),
                             child: GestureDetector(
@@ -127,84 +129,78 @@ class _SearchState extends State<Search> {
                                       );
                                     }),
                                   )),
-                              child: Hero(
-                                tag: current.id,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Positioned(
-                                      top: size.height * 0.02,
-                                      left: size.width * 0.01,
-                                      right: size.width * 0.01,
-                                      child: Container(
-                                        width: size.width * 0.5,
-                                        height: size.height * 0.28,
-                                        margin: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(3),
-                                          image: DecorationImage(
-                                            image: AssetImage(current.imageUrl),
-                                            fit: BoxFit.cover,
-                                          ),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              offset: Offset(0, 4),
-                                              blurRadius: 4,
-                                              color:
-                                                  Color.fromARGB(61, 0, 0, 0),
-                                            )
-                                          ],
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Positioned(
+                                    top: size.height * 0.02,
+                                    left: size.width * 0.01,
+                                    right: size.width * 0.01,
+                                    child: Container(
+                                      width: size.width * 0.5,
+                                      height: size.height * 0.28,
+                                      margin: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(3),
+                                        image: DecorationImage(
+                                          image: AssetImage(current.imageUrl),
+                                          fit: BoxFit.cover,
+                                        ),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            offset: Offset(0, 4),
+                                            blurRadius: 4,
+                                            color: Color.fromARGB(61, 0, 0, 0),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: size.height * 0.02,
+                                    child: Text(
+                                      current.name,
+                                      style: textTheme.headline2,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: size.height * 0.001,
+                                    child: RichText(
+                                        text: TextSpan(
+                                            text: "DZA",
+                                            style:
+                                                textTheme.subtitle2?.copyWith(
+                                              color: primaryColor,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            children: [
+                                          TextSpan(
+                                            text: current.price.toString(),
+                                            style:
+                                                textTheme.subtitle2?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )
+                                        ])),
+                                  ),
+                                  Positioned(
+                                    top: size.height * 0.01,
+                                    right: 0,
+                                    child: CircleAvatar(
+                                      backgroundColor: primaryColor,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          AddToCart.addToCart(current, context);
+                                        },
+                                        icon: const Icon(
+                                          LineIcons.addToShoppingCart,
+                                          color: Colors.white,
                                         ),
                                       ),
                                     ),
-                                    Positioned(
-                                      bottom: size.height * 0.04,
-                                      child: Text(
-                                        current.name,
-                                        style: textTheme.headline2,
-                                      ),
-                                    ),
-                                    Positioned(
-                                      bottom: size.height * 0.01,
-                                      child: RichText(
-                                          text: TextSpan(
-                                              text: "€",
-                                              style:
-                                                  textTheme.subtitle2?.copyWith(
-                                                color: primaryColor,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              children: [
-                                            TextSpan(
-                                              text: current.price.toString(),
-                                              style:
-                                                  textTheme.subtitle2?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            )
-                                          ])),
-                                    ),
-                                    Positioned(
-                                      top: size.height * 0.01,
-                                      right: 0,
-                                      child: CircleAvatar(
-                                        backgroundColor: primaryColor,
-                                        child: IconButton(
-                                          onPressed: () {
-                                            AddToCart.addToCart(
-                                                current, context);
-                                          },
-                                          icon: const Icon(
-                                            LineIcons.addToShoppingCart,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           );

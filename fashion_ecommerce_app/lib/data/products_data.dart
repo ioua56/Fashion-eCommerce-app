@@ -10,20 +10,18 @@ class ProductsData {
   final String _popularProductsCollectionNam = 'PopularProducts';
 
   Stream<List<Product>> get products {
-    return _firestore
-        .collection(_productsCollectionName)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
+    return _firestore.collection(_productsCollectionName).snapshots().map(
+        (snapshot) => snapshot.docs
             .map((document) => Product(
-                  imageUrl: document['imageUrl'],
-                  name: document['name'],
-                  price: double.parse(document['price'].toString()),
-                  review: double.parse(document['review']!.toString()),
-                  star: double.parse(document['star']!.toString()),
-                  value: int.parse(document['value']!.toString()),
-                  category: document['category'],
-                  id: document.id,
-                ))
+                imageUrl: document['imageUrl'],
+                name: document['name'],
+                price: double.parse(document['price'].toString()),
+                review: double.parse(document['review']!.toString()),
+                star: double.parse(document['star']!.toString()),
+                value: int.parse(document['value']!.toString()),
+                category: document['category'],
+                id: document.id,
+                discount: 0))
             .toList());
   }
 
@@ -35,15 +33,15 @@ class ProductsData {
       for (var doc in docs) {
         DocumentSnapshot productSnapshot = await doc.data()['Product'].get();
         products.add(Product(
-          id: productSnapshot.id,
-          imageUrl: productSnapshot['imageUrl'],
-          name: productSnapshot['name'],
-          price: double.parse(productSnapshot['price']!.toString()),
-          review: double.parse(productSnapshot['review']!.toString()),
-          star: double.parse(productSnapshot['star']!.toString()),
-          category: productSnapshot['category'],
-          value: int.parse(productSnapshot['value']!.toString()),
-        ));
+            id: productSnapshot.id,
+            imageUrl: productSnapshot['imageUrl'],
+            name: productSnapshot['name'],
+            price: double.parse(productSnapshot['price']!.toString()),
+            review: double.parse(productSnapshot['review']!.toString()),
+            star: double.parse(productSnapshot['star']!.toString()),
+            category: productSnapshot['category'],
+            value: int.parse(productSnapshot['value']!.toString()),
+            discount: 10));
       }
       yield products;
     }
@@ -58,15 +56,15 @@ class ProductsData {
       List<Product> products = [];
       snapshot.docs.forEach((productSnapshot) {
         products.add(Product(
-          id: productSnapshot.id,
-          imageUrl: productSnapshot['imageUrl'],
-          name: productSnapshot['name'],
-          price: double.parse(productSnapshot['price']!.toString()),
-          review: double.parse(productSnapshot['review']!.toString()),
-          star: double.parse(productSnapshot['star']!.toString()),
-          category: productSnapshot['category'],
-          value: int.parse(productSnapshot['value']!.toString()),
-        ));
+            id: productSnapshot.id,
+            imageUrl: productSnapshot['imageUrl'],
+            name: productSnapshot['name'],
+            price: double.parse(productSnapshot['price']!.toString()),
+            review: double.parse(productSnapshot['review']!.toString()),
+            star: double.parse(productSnapshot['star']!.toString()),
+            category: productSnapshot['category'],
+            value: int.parse(productSnapshot['value']!.toString()),
+            discount: 0));
       });
       print("length of prodcuts");
       print(products.length);
@@ -75,7 +73,6 @@ class ProductsData {
   }
 
   Future<List<Product>> getProductsByCategory2(String categoryId) async {
-
     List<Product> products = [];
     QuerySnapshot querySnapshot = await _firestore
         .collection("BaseModel")
@@ -92,17 +89,14 @@ class ProductsData {
         star: double.parse(productSnapshot['star']!.toString()),
         category: productSnapshot['category'],
         value: int.parse(productSnapshot['value']!.toString()),
+        discount: 0,
       ));
     });
-    print("Categories length");
-    print(products.length);
+
     return products;
   }
 
   Stream<List<Product>> getProductsByCategoryStream(String categoryId) {
     return Stream.fromFuture(getProductsByCategory2(categoryId));
   }
-
-
-
 }

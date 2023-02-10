@@ -9,6 +9,8 @@ class Product {
   final double review;
   final double star;
   final DocumentReference category;
+  final double discount;
+  final DateTime? dateTime;
   int value;
 
   Product(
@@ -19,5 +21,7 @@ class Product {
       required this.review,
       required this.star,
       required this.value,
-      required this.category});
+      required this.category,
+      required this.discount,
+      this.dateTime});
 }

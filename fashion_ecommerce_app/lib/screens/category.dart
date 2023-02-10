@@ -10,6 +10,7 @@ import '../utils/constants.dart';
 import '../widget/add_to_cart.dart';
 import '../data/app_data.dart';
 import '../screens/details.dart';
+import '../widget/reusable_card.dart';
 
 class Category extends StatefulWidget {
   static const routeName = '/category';
@@ -47,6 +48,7 @@ class _CategoryState extends State<Category> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    var customSize = Size(MediaQuery.of(context).size.height * 0.34, MediaQuery.of(context).size.height * 0.75);
     var textTheme = Theme.of(context).textTheme;
     CategoriesModel current = widget.category;
 
@@ -190,64 +192,7 @@ class _CategoryState extends State<Category> {
                                       child: Stack(
                                         alignment: Alignment.center,
                                         children: [
-                                          Positioned(
-                                            top: size.height * 0.02,
-                                            left: size.width * 0.01,
-                                            right: size.width * 0.01,
-                                            child: Container(
-                                              width: size.width * 0.5,
-                                              height: size.height * 0.28,
-                                              margin: const EdgeInsets.all(10),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(3),
-                                                image: DecorationImage(
-                                                  image: NetworkImage(
-                                                      current.imageUrl),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                                boxShadow: const [
-                                                  BoxShadow(
-                                                    offset: Offset(0, 4),
-                                                    blurRadius: 4,
-                                                    color: Color.fromARGB(
-                                                        61, 0, 0, 0),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            bottom: size.height * 0.02,
-                                            child: Text(
-                                              current.name,
-                                              style: textTheme.headline2,
-                                            ),
-                                          ),
-                                          Positioned(
-                                            bottom: size.height * 0.001,
-                                            child: RichText(
-                                                text: TextSpan(
-                                                    text: "DZA",
-                                                    style: textTheme.subtitle2
-                                                        ?.copyWith(
-                                                      color: primaryColor,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                    children: [
-                                                  TextSpan(
-                                                    text: current.price
-                                                        .toString(),
-                                                    style: textTheme.subtitle2
-                                                        ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  )
-                                                ])),
-                                          ),
+                                          ProductCard(data: current,theme: textTheme,size: customSize),
                                           Positioned(
                                             top: size.height * 0.01,
                                             right: 0,

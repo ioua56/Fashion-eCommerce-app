@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:fashion_ecommerce_app/screens/category.dart';
+import 'package:fashion_ecommerce_app/widget/reusable_card.dart';
 import 'package:flutter/material.dart';
 
 import '../data/app_data.dart';
@@ -37,6 +38,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    var customSize = Size(size.height * 0.34, size.height * 0.75);
     var textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
@@ -182,7 +184,7 @@ class _HomeState extends State<Home> {
                           ),
                         );
                       }
-                      return Container();
+                      return Center(child: CircularProgressIndicator());
                     }),
               ),
 
@@ -223,73 +225,21 @@ class _HomeState extends State<Home> {
                               itemBuilder: (context, index) {
                                 Product current = snapshot.data![index];
                                 return GestureDetector(
-                                  onTap: (() => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                          return Details(
-                                            data: current,
-                                            isCameFromMostPopularPart: true,
-                                          );
-                                        }),
-                                      )),
-                                  child: Hero(
-                                    tag: current.imageUrl,
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          width: size.width * 0.5,
-                                          height: size.height * 0.28,
-                                          margin: const EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(3),
-                                            image: DecorationImage(
-                                              image:
-                                                  NetworkImage(current.imageUrl),
-                                              fit: BoxFit.cover,
-                                            ),
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                offset: Offset(0, 4),
-                                                blurRadius: 4,
-                                                color:
-                                                    Color.fromARGB(61, 0, 0, 0),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 2.0),
-                                          child: Text(
-                                            current.name,
-                                            style: textTheme.headline2,
-                                          ),
-                                        ),
-                                        RichText(
-                                            text: TextSpan(
-                                                text: "DZA",
-                                                style: textTheme.subtitle2
-                                                    ?.copyWith(
-                                                  color: primaryColor,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                children: [
-                                              TextSpan(
-                                                text: current.price.toString(),
-                                                style: textTheme.subtitle2
-                                                    ?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              )
-                                            ])),
-                                      ],
-                                    ),
-                                  ),
-                                );
+                                    onTap: (() => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                            return Details(
+                                              data: current,
+                                              isCameFromMostPopularPart: true,
+                                            );
+                                          }),
+                                        )),
+                                    child: ProductCard(
+                                        size: customSize,
+                                        theme: textTheme,
+                                        data: current));
                               }),
                         );
                       }
@@ -315,63 +265,12 @@ class _HomeState extends State<Home> {
           }
           return Transform.rotate(
             angle: 3.14 * value,
-            child: card(data, theme, size),
+            child: ProductCard(
+              data: data,
+              theme: theme,
+              size: size,
+            ),
           );
         });
-  }
-
-  /// Page view Cards
-  Widget card(Product data, TextTheme theme, Size size) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 15.0),
-      child: Column(
-        children: [
-          Hero(
-            tag: data.id,
-            child: Container(
-              width: size.width * 0.6,
-              height: size.height * 0.35,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3),
-                image: DecorationImage(
-                  image: NetworkImage(data.imageUrl),
-                  fit: BoxFit.cover,
-                ),
-                boxShadow: const [
-                  BoxShadow(
-                      offset: Offset(0, 4),
-                      blurRadius: 4,
-                      color: Color.fromARGB(61, 0, 0, 0))
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: Text(
-              data.name,
-              style: theme.headline2,
-            ),
-          ),
-          RichText(
-            text: TextSpan(
-              text: "DZA",
-              style: theme.subtitle2?.copyWith(
-                color: primaryColor,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-              children: [
-                TextSpan(
-                  text: data.price.toString(),
-                  style: theme.subtitle2
-                      ?.copyWith(fontWeight: FontWeight.w600, fontSize: 25),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

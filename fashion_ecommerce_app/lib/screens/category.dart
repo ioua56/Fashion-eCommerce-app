@@ -11,6 +11,7 @@ import '../widget/add_to_cart.dart';
 import '../data/app_data.dart';
 import '../screens/details.dart';
 import '../widget/reusable_card.dart';
+import '../widget/reusable_filter_widget.dart';
 
 class Category extends StatefulWidget {
   static const routeName = '/category';
@@ -26,18 +27,20 @@ class _CategoryState extends State<Category> {
   late TextEditingController controller;
   bool isSearchActive = false;
   List<Product> itemsOnSearch = [];
+  bool showFilter = false;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
+    _scrollController = ScrollController();
     controller = TextEditingController();
-
     itemsOnSearch = mainList;
     super.initState();
   }
 
   // Searching Function for TextField
   onSearch(String search) {
-    ProductsData().getProductsByCategoryStream("0jFA4SOxm0vv7uuOE6iF");
+    //ProductsData().getProductsByCategoryStream("0jFA4SOxm0vv7uuOE6iF");
     setState(() {
       itemsOnSearch = mainList
           .where((element) => element.name.toLowerCase().contains(search))
@@ -48,7 +51,8 @@ class _CategoryState extends State<Category> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    var customSize = Size(MediaQuery.of(context).size.height * 0.34, MediaQuery.of(context).size.height * 0.75);
+    var customSize = Size(MediaQuery.of(context).size.height * 0.34,
+        MediaQuery.of(context).size.height * 0.75);
     var textTheme = Theme.of(context).textTheme;
     CategoriesModel current = widget.category;
 
@@ -110,44 +114,65 @@ class _CategoryState extends State<Category> {
                 delay: const Duration(milliseconds: 50),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
-                  child: SizedBox(
-                    width: size.width,
-                    height: size.height * 0.07,
-                    child: Center(
-                      child: TextField(
-                        controller: controller,
-                        onChanged: (value) {
-                          onSearch(value);
-                        },
-                        style: textTheme.headline3?.copyWith(
-                            fontSize: 15, fontWeight: FontWeight.w400),
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 0, horizontal: 20),
-                          filled: true,
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              controller.clear();
-                              FocusManager.instance.primaryFocus?.unfocus();
-                              setState(() {
-                                itemsOnSearch = mainList;
-                              });
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: size.width * 0.8,
+                        height: size.height * 0.07,
+                        child: Center(
+                          child: TextField(
+                            controller: controller,
+                            onChanged: (value) {
+                              onSearch(value);
                             },
-                            icon: const Icon(Icons.close),
-                          ),
-                          hintStyle: textTheme.headline3?.copyWith(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.grey[600],
-                          ),
-                          hintText: "e,g.Casual Jeans",
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(13),
+                            style: textTheme.headline3?.copyWith(
+                                fontSize: 15, fontWeight: FontWeight.w400),
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 0, horizontal: 20),
+                              filled: true,
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  controller.clear();
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                                  setState(() {
+                                    itemsOnSearch = mainList;
+                                  });
+                                },
+                                icon: const Icon(Icons.close),
+                              ),
+                              hintStyle: textTheme.headline3?.copyWith(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey[600],
+                              ),
+                              hintText: "e,g.Casual Jeans",
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(13),
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                      IconButton(
+                        onPressed: () {
+                          if (_scrollController.hasClients) {
+                            _scrollController.animateTo(
+                              _scrollController.position.maxScrollExtent,
+                              curve: Curves.easeInOut,
+                              duration: const Duration(milliseconds: 300),
+                            );
+                          }
+                          // Add code for filter button action here
+                          setState(() {
+                            showFilter = !showFilter;
+                          });
+                        },
+                        icon: Icon(Icons.tune),
+                        color: primaryColor,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -192,7 +217,10 @@ class _CategoryState extends State<Category> {
                                       child: Stack(
                                         alignment: Alignment.center,
                                         children: [
-                                          ProductCard(data: current,theme: textTheme,size: customSize),
+                                          ProductCard(
+                                              data: current,
+                                              theme: textTheme,
+                                              size: customSize),
                                           Positioned(
                                             top: size.height * 0.01,
                                             right: 0,
@@ -254,6 +282,22 @@ class _CategoryState extends State<Category> {
             ],
           ),
         ),
+        bottomSheet: showFilter ? Container(
+          height: size.height * 0.7,
+          child: Align(
+                  alignment: Alignment.topCenter,
+                  child: DraggableScrollableSheet(
+                    expand: false,
+                    builder: (context, ScrollController scrollController) {
+                      _scrollController = scrollController;
+                      return Container(
+                        color: Colors.white,
+                        child: FilterWidget(),
+                      );
+                    },
+                  ),
+                ),
+        ): Container(height: 0,),
       ),
     );
   }

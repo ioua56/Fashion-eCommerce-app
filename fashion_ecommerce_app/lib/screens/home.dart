@@ -78,7 +78,7 @@ class _HomeState extends State<Home> {
                       ),
                       RichText(
                         text: const TextSpan(
-                          text: "Be more beautiful with our ",
+                          text: "Be more ugly with islam",
                           style: TextStyle(
                             color: Color.fromARGB(186, 0, 0, 0),
                             fontSize: 16,
